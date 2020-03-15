@@ -1,0 +1,36 @@
+version: '3'
+services:
+  react_app:
+    build: ./react_app
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./react_app:/react_app
+
+  work_api:
+    build: ./work_api
+    volumes:
+      - ./work_api:/work_api
+    ports:
+      - "8080:8080"
+    environment:
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    depends_on:
+      - work_db
+    restart: always
+
+  work_db:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    volumes:
+      - ./work_db/db_data:/var/lib/mysql
+      - ./work_db/my.conf:/etc/mysql/conf.d/my.conf
+    security_opt:
+      - seccomp:unconfined

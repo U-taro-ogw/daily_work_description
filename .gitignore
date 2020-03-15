@@ -1,0 +1,11 @@
+# ide
+.idea
+
+.env
+work_db/db_data/
+*.iml
+.DS_Store
+
+# react
+react_app/node_modules/
+
