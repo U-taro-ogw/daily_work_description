@@ -10,7 +10,7 @@ import (
 type WorkRecord struct {
 	gorm.Model
 
-	WorkDate time.Date `json:"work_date"`
+	WorkDate time.Time `json:"work_date"`
 	BeginWorkTime time.Time `json:"begin_work_time"`
 	EndWorkDate time.Time `json:"end_work_time"`
 	BeginBreakTime time.Time `json:"begin_break_time"`

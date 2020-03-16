@@ -4,7 +4,7 @@ import (
     "github.com/gorilla/mux"
     "github.com/jinzhu/gorm"
 
-    "os"
+    "github.com/U-taro-ogw/daily_work_description/work_api/db/connect"
 )
 
 type App struct {
@@ -13,9 +13,11 @@ type App struct {
 }
 
 func (a *App) Initialize() {
-
+    a.DB = connect.MysqlConnection()
+    a.Router = mux.NewRouter()
 }
 
 func (a *App) Run(addr string)  {
 
 }
+
