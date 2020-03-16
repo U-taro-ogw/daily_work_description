@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	//"log"
 	"os"
 	"testing"
 )
@@ -14,11 +14,11 @@ func TestMain(m *testing.M) {
 
 	code := m.Run()
 
-	clearTable()
+	//clearTable()
 
 	os.Exit(code)
 }
 
-func clearTable()  {
-	a.DB.Exec("DELETE FROM work_records")
-}
+//func clearTable()  {
+//	a.DB.Exec("DELETE FROM work_records")
+//}
