@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -98,7 +99,11 @@ func TestGetWorkRecord(t *testing.T)  {
 	clearTable()
 	addWorkRecord(1)
 
-	req, _ := http.NewRequest("GET", "work_records/1", nil)
+	var work models.WorkRecord
+	a.DB.First(&work)
+	path := `/work_records/` + fmt.Sprint(work.ID)
+
+	req, _ := http.NewRequest("GET", path, nil)
 	response := executeRequest(req)
 
 	checkResponseCode(t, http.StatusOK, response.Code)
@@ -107,7 +112,12 @@ func TestGetWorkRecord(t *testing.T)  {
 func TestUpdateWorkRecord(t *testing.T)  {
 	clearTable()
 	addWorkRecord(1)
-	req, _ := http.NewRequest("GET", "work_records/1", nil)
+
+	var work models.WorkRecord
+	a.DB.First(&work)
+	path := `/work_records/` + fmt.Sprint(work.ID)
+
+	req, _ := http.NewRequest("GET", path, nil)
 	response := executeRequest(req)
 	var beforeWorkRecord map[string]interface{}
 	json.Unmarshal(response.Body.Bytes(), &beforeWorkRecord)
@@ -122,7 +132,7 @@ func TestUpdateWorkRecord(t *testing.T)  {
 }
 `
 	payload := []byte(param)
-	req, _ = http.NewRequest("PUT", "work_records/1", bytes.NewBuffer(payload))
+	req, _ = http.NewRequest("PUT", path, bytes.NewBuffer(payload))
 	response = executeRequest(req)
 
 	checkResponseCode(t, http.StatusOK, response.Code)
@@ -158,19 +168,21 @@ func TestDeleteWorkRecord(t *testing.T) {
 	clearTable()
 	addWorkRecord(1)
 
-	// TODO addしたあとにIDだけ取得してrequest時に指定すること
-	req, _ := http.NewRequest("GET", "/work_records/1", nil)
+	var work models.WorkRecord
+	a.DB.First(&work)
+	path := `/work_records/` + fmt.Sprint(work.ID)
+
+	req, _ := http.NewRequest("GET", path, nil)
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusOK, response.Code)
 
-	req, _ = http.NewRequest("DELETE", "/work_records/1", nil)
+	req, _ = http.NewRequest("DELETE", path, nil)
 	response = executeRequest(req)
 	checkResponseCode(t, http.StatusOK, response.Code)
 
-	req, _ = http.NewRequest("GET", "/work_records/1", nil)
+	req, _ = http.NewRequest("GET", path, nil)
 	response = executeRequest(req)
 	checkResponseCode(t, http.StatusNotFound, response.Code)
-
 }
 
 func addWorkRecord(count int)  {
