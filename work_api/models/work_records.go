@@ -18,7 +18,7 @@ type WorkRecord struct {
 }
 
 func (w *WorkRecord) GetWorkRecord(db *gorm.DB) error {
-	return errors.New("未実装")
+	return db.First(&w, w.ID).Error
 }
 
 func (w *WorkRecord) UpdateWorkRecord(db *gorm.DB) error {
