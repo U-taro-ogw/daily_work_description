@@ -26,7 +26,7 @@ func TestMain(m *testing.M) {
 	os.Exit(code)
 }
 
-func TestEmptyTable(t *testing.T)  {
+func TestEmptyTable(t *testing.T) {
 	clearTable()
 
 	req, _ := http.NewRequest("GET", "/work_records", nil)
@@ -39,7 +39,7 @@ func TestEmptyTable(t *testing.T)  {
 	}
 }
 
-func TestGetNotExistsWorkRecord(t *testing.T)  {
+func TestGetNotExistsWorkRecord(t *testing.T) {
 	clearTable()
 
 	req, _ := http.NewRequest("GET", "/work_records/1", nil)
@@ -54,7 +54,7 @@ func TestGetNotExistsWorkRecord(t *testing.T)  {
 	}
 }
 
-func TestCreateWorkRecord(t *testing.T)  {
+func TestCreateWorkRecord(t *testing.T) {
 	clearTable()
 	param := `
 {
@@ -95,7 +95,7 @@ func TestCreateWorkRecord(t *testing.T)  {
 	}
 }
 
-func TestGetWorkRecord(t *testing.T)  {
+func TestGetWorkRecord(t *testing.T) {
 	clearTable()
 	addWorkRecord(1)
 
@@ -109,7 +109,7 @@ func TestGetWorkRecord(t *testing.T)  {
 	checkResponseCode(t, http.StatusOK, response.Code)
 }
 
-func TestUpdateWorkRecord(t *testing.T)  {
+func TestUpdateWorkRecord(t *testing.T) {
 	clearTable()
 	addWorkRecord(1)
 
@@ -185,7 +185,7 @@ func TestDeleteWorkRecord(t *testing.T) {
 	checkResponseCode(t, http.StatusNotFound, response.Code)
 }
 
-func addWorkRecord(count int)  {
+func addWorkRecord(count int) {
 	var work models.WorkRecord
 	if count < 1 {
 		count = 1
@@ -211,12 +211,12 @@ func executeRequest(req *http.Request) *httptest.ResponseRecorder {
 	return rr
 }
 
-func checkResponseCode(t *testing.T, expected, actual int)  {
+func checkResponseCode(t *testing.T, expected, actual int) {
 	if expected != actual {
 		t.Errorf("Expected response code %d. Got %d\n", expected, actual)
 	}
 }
 
-func clearTable()  {
+func clearTable() {
 	a.DB.Exec("DELETE FROM work_records")
 }
