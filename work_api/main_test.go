@@ -49,7 +49,7 @@ func TestGetNotExistsWorkRecord(t *testing.T) {
 
 	var m map[string]string
 	json.Unmarshal(response.Body.Bytes(), &m)
-	if m["error"] != "WorkRecord not found" {
+	if m["error"] != "Not Found" {
 		t.Errorf("Expected the 'error' key of the response to be set to 'WorkRecord not found'. Got '%s'", m["error"])
 	}
 }
