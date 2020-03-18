@@ -34,5 +34,7 @@ func (w *WorkRecord) CreateWorkRecord(db *gorm.DB) error {
 }
 
 func getWorkRecords(db *gorm.DB, begin_date, end_date time.Time) ([]WorkRecord, error) {
-	return nil, errors.New("未実装")
+	var workRecords []WorkRecord
+
+	return workRecords, nil
 }

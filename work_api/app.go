@@ -24,12 +24,18 @@ func (a *App) Initialize() {
 	a.initializeRoutes()
 }
 
+func (a *App)initializeRoutes() {
+	a.Router.HandleFunc("/work_records", a.getWorkRecords).Methods("POST")
+	a.Router.HandleFunc("/work_records/{id:[0-9]+}", a.getWorkRecord).Methods("GET")
+}
+
 func (a *App) Run(addr string) {
 	log.Fatal(http.ListenAndServe(addr, a.Router))
 }
 
-func (a *App)initializeRoutes() {
-	a.Router.HandleFunc("/work_records/{id:[0-9]+}", a.getWorkRecord).Methods("GET")
+func (a *App) getWorkRecords(w http.ResponseWriter, r *http.Request)  {
+	wrs := []models.WorkRecord{}
+	respondWithJSON(w, http.StatusOK, wrs)
 }
 
 func (a *App) getWorkRecord(w http.ResponseWriter, r *http.Request)  {
