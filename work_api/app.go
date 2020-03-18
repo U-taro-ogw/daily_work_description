@@ -37,7 +37,8 @@ func (a *App) Run(addr string) {
 }
 
 func (a *App) getWorkRecords(w http.ResponseWriter, r *http.Request)  {
-	wrs := []models.WorkRecord{}
+	var wrs []models.WorkRecord
+	wrs, _ = models.GetWorkRecords(a.DB)
 	respondWithJSON(w, http.StatusOK, wrs)
 }
 
