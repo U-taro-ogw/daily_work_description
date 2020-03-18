@@ -11,8 +11,6 @@ import (
 
 	"github.com/U-taro-ogw/daily_work_description/work_api/db"
 	"github.com/U-taro-ogw/daily_work_description/work_api/models"
-
-	//"fmt"
 )
 
 type App struct {
@@ -39,7 +37,7 @@ func (a *App) Run(addr string) {
 func (a *App) getWorkRecords(w http.ResponseWriter, r *http.Request)  {
 	var wrs []models.WorkRecord
 	wrs, _ = models.GetWorkRecords(a.DB)
-	respondWithJSON(w, http.StatusOK, wrs)
+	respondWithJSON(w, http.StatusOK, map[string]interface{}{"work_records": wrs})
 }
 
 func (a *App) getWorkRecord(w http.ResponseWriter, r *http.Request)  {
@@ -73,7 +71,7 @@ func (a *App) createWorkRecord(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	respondWithJSON(w, http.StatusCreated, wr)
+	respondWithJSON(w, http.StatusCreated, map[string]interface{}{"work_record": wr})
 }
 
 func respondWithError(w http.ResponseWriter, code int, message string)  {
