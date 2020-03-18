@@ -30,7 +30,8 @@ func (w *WorkRecord) DeleteWorkRecord(db *gorm.DB) error {
 }
 
 func (w *WorkRecord) CreateWorkRecord(db *gorm.DB) error {
-	return errors.New("未実装")
+	db.Create(&w)
+	return nil
 }
 
 func getWorkRecords(db *gorm.DB, begin_date, end_date time.Time) ([]WorkRecord, error) {

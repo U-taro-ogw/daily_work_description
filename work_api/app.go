@@ -11,6 +11,8 @@ import (
 
 	"github.com/U-taro-ogw/daily_work_description/work_api/db"
 	"github.com/U-taro-ogw/daily_work_description/work_api/models"
+
+	//"fmt"
 )
 
 type App struct {
@@ -25,8 +27,9 @@ func (a *App) Initialize() {
 }
 
 func (a *App)initializeRoutes() {
-	a.Router.HandleFunc("/work_records", a.getWorkRecords).Methods("POST")
+	a.Router.HandleFunc("/work_records", a.getWorkRecords).Methods("GET")
 	a.Router.HandleFunc("/work_records/{id:[0-9]+}", a.getWorkRecord).Methods("GET")
+	a.Router.HandleFunc("/work_records", a.createWorkRecord).Methods("POST")
 }
 
 func (a *App) Run(addr string) {
@@ -53,6 +56,23 @@ func (a *App) getWorkRecord(w http.ResponseWriter, r *http.Request)  {
 	}
 
 	respondWithJSON(w, http.StatusOK, wr)
+}
+
+func (a *App) createWorkRecord(w http.ResponseWriter, r *http.Request) {
+	var wr models.WorkRecord
+	decoder := json.NewDecoder(r.Body)
+	if err := decoder.Decode(&wr); err != nil {
+		respondWithError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	defer r.Body.Close()
+
+	if err := wr.CreateWorkRecord(a.DB); err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	respondWithJSON(w, http.StatusCreated, wr)
 }
 
 func respondWithError(w http.ResponseWriter, code int, message string)  {

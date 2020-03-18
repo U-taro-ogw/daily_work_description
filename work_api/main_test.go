@@ -61,7 +61,7 @@ func TestCreateWorkRecord(t *testing.T) {
 "begin_work_time": "2014-10-10T10:00:00+09:00",
 "end_work_time": "2014-10-10T19:00:00+09:00",
 "begin_break_time": "2014-10-10T12:00:00+09:00",
-"end_break_time": "2014-10-10T13:00:00+09:00",
+"end_break_time": "2014-10-10T13:00:00+09:00"
 }
 `
 	payload := []byte(param)
