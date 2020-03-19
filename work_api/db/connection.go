@@ -14,7 +14,7 @@ func MysqlConnect() *gorm.DB {
 	PASS := os.Getenv("MYSQL_ROOT_PASSWORD")
 	PROTOCOL := "tcp(work_db:3306)"
 	DBNAME := os.Getenv("MYSQL_DATABASE")
-	CONNECT := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME + "?parseTime=true"
+	CONNECT := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME + "?parseTime=true&loc=Asia%2FTokyo"
 	db, err := gorm.Open("mysql", CONNECT)
 
 	if err != nil {

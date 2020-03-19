@@ -29,6 +29,7 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
+      TZ: Asia/Tokyo
     volumes:
       - ./work_db/db_data:/var/lib/mysql
       - ./work_db/my.conf:/etc/mysql/conf.d/my.conf

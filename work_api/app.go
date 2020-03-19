@@ -48,7 +48,7 @@ func (a *App) getWorkRecord(w http.ResponseWriter, r *http.Request)  {
 		return
 	}
 
-	wr := models.WorkRecord{Model: gorm.Model{ID: uint(id)}}
+	wr := models.WorkRecord{ID: id}
 	if err := wr.GetWorkRecord(a.DB); err != nil {
 		respondWithError(w, http.StatusNotFound, "Not Found")
 		return

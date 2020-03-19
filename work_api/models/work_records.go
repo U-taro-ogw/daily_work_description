@@ -8,13 +8,15 @@ import (
 )
 
 type WorkRecord struct {
-	gorm.Model
-
+	ID        int `json:"id" gorm:"primary_key"`
 	WorkDate time.Time `json:"work_date"`
 	BeginWorkTime time.Time `json:"begin_work_time"`
-	EndWorkDate time.Time `json:"end_work_time"`
+	EndWorkTime time.Time `json:"end_work_time"`
 	BeginBreakTime time.Time `json:"begin_break_time"`
 	EndBreakTime time.Time `json:"end_break_time"`
+
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 func (w *WorkRecord) GetWorkRecord(db *gorm.DB) error {
