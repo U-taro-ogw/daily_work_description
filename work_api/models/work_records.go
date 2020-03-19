@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/jinzhu/gorm"
+
 )
 
 type WorkRecord struct {
@@ -24,7 +25,12 @@ func (w *WorkRecord) GetWorkRecord(db *gorm.DB) error {
 }
 
 func (w *WorkRecord) UpdateWorkRecord(db *gorm.DB) error {
-	return errors.New("未実装")
+	var record WorkRecord
+	if err := db.First(&record, w.ID).Error; err != nil {
+		return errors.New("Not Found")
+	}
+
+	return db.Model(&w).Updates(w).Error
 }
 
 func (w *WorkRecord) DeleteWorkRecord(db *gorm.DB) error {
