@@ -25,7 +25,7 @@ func (a *App) Initialize() {
 	a.initializeRoutes()
 }
 
-func (a *App)initializeRoutes() {
+func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/work_records", a.getWorkRecords).Methods("GET")
 	a.Router.HandleFunc("/work_records/{id:[0-9]+}", a.getWorkRecord).Methods("GET")
 	a.Router.HandleFunc("/work_records", a.createWorkRecord).Methods("POST")
@@ -37,13 +37,13 @@ func (a *App) Run(addr string) {
 	log.Fatal(http.ListenAndServe(addr, a.Router))
 }
 
-func (a *App) getWorkRecords(w http.ResponseWriter, r *http.Request)  {
+func (a *App) getWorkRecords(w http.ResponseWriter, r *http.Request) {
 	var wrs []models.WorkRecord
 	wrs, _ = models.GetWorkRecords(a.DB)
 	respondWithJSON(w, http.StatusOK, map[string]interface{}{"work_records": wrs})
 }
 
-func (a *App) getWorkRecord(w http.ResponseWriter, r *http.Request)  {
+func (a *App) getWorkRecord(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
@@ -106,7 +106,7 @@ func (a *App) updateWorkRecord(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	w.Header().Set("Location", "http://localhost:8080/" + fmt.Sprint(wr.ID))
+	w.Header().Set("Location", "http://localhost:8080/"+fmt.Sprint(wr.ID))
 	respondWithJSON(w, http.StatusNoContent, nil)
 }
 
@@ -133,11 +133,11 @@ func (a *App) deleteWorkRecord(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusNoContent, nil)
 }
 
-func respondWithError(w http.ResponseWriter, code int, message string)  {
+func respondWithError(w http.ResponseWriter, code int, message string) {
 	respondWithJSON(w, code, map[string]string{"error": message})
 }
 
-func respondWithJSON(w http.ResponseWriter, code int, payload interface{})  {
+func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 	response, _ := json.Marshal(payload)
 
 	w.Header().Set("Content-Type", "application/json")

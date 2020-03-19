@@ -55,16 +55,14 @@ func TestGetNotExistsWorkRecord(t *testing.T) {
 
 func TestCreateWorkRecord(t *testing.T) {
 	clearTable()
-	param := `
-{
-"work_date": "2014-10-10T00:00:00+09:00",
-"begin_work_time": "2014-10-10T10:00:00+09:00",
-"end_work_time": "2014-10-10T19:00:00+09:00",
-"begin_break_time": "2014-10-10T12:00:00+09:00",
-"end_break_time": "2014-10-10T13:00:00+09:00"
-}
-`
-	payload := []byte(param)
+	param := map[string]string{
+		"work_date":        "2014-10-10T00:00:00+09:00",
+		"begin_work_time":  "2014-10-10T10:00:00+09:00",
+		"end_work_time":    "2014-10-10T19:00:00+09:00",
+		"begin_break_time": "2014-10-10T12:00:00+09:00",
+		"end_break_time":   "2014-10-10T13:00:00+09:00",
+	}
+	payload, _ := json.Marshal(param)
 	req, _ := http.NewRequest("POST", "/work_records", bytes.NewBuffer(payload))
 	response := executeRequest(req)
 
@@ -73,24 +71,44 @@ func TestCreateWorkRecord(t *testing.T) {
 	var m map[string]models.WorkRecord
 	json.Unmarshal(response.Body.Bytes(), &m)
 
-	if m["work_record"].WorkDate.Format(time.RFC3339) != "2014-10-10T00:00:00+09:00" {
-		t.Errorf("Expected work_date to be '2014-10-10T00:00:00+09:00'. Got '%v'", m["work_record"].WorkDate.Format(time.RFC3339))
+	if m["work_record"].WorkDate.Format(time.RFC3339) != param["work_date"] {
+		t.Errorf(
+			"Expected work_date to be '%v'. Got '%v'",
+			param["work_date"],
+			m["work_record"].WorkDate.Format(time.RFC3339),
+		)
 	}
 
-	if m["work_record"].BeginWorkTime.Format(time.RFC3339) != "2014-10-10T10:00:00+09:00" {
-		t.Errorf("Expected begin_work_time to be '2014-10-10T10:00:00+09:00'. Got '%v'", m["work_record"].BeginWorkTime.Format(time.RFC3339))
+	if m["work_record"].BeginWorkTime.Format(time.RFC3339) != param["begin_work_time"] {
+		t.Errorf(
+			"Expected begin_work_time to be '%v'. Got '%v'",
+			param["begin_work_time"],
+			m["work_record"].BeginWorkTime.Format(time.RFC3339),
+		)
 	}
 
-	if m["work_record"].EndWorkTime.Format(time.RFC3339) != "2014-10-10T19:00:00+09:00" {
-		t.Errorf("Expected end_work_time to be '2014-10-10T19:00:00+09:00'. Got '%v'", m["work_record"].EndWorkTime.Format(time.RFC3339))
+	if m["work_record"].EndWorkTime.Format(time.RFC3339) != param["end_work_time"] {
+		t.Errorf(
+			"Expected end_work_time to be '%v'. Got '%v'",
+			param["end_work_time"],
+			m["work_record"].EndWorkTime.Format(time.RFC3339),
+		)
 	}
 
-	if m["work_record"].BeginBreakTime.Format(time.RFC3339) != "2014-10-10T12:00:00+09:00" {
-		t.Errorf("Expected begin_break_time to be '2014-10-10T12:00:00+09:00'. Got '%v'", m["work_record"].BeginBreakTime.Format(time.RFC3339))
+	if m["work_record"].BeginBreakTime.Format(time.RFC3339) != param["begin_break_time"] {
+		t.Errorf(
+			"Expected begin_break_time to be '%v'. Got '%v'",
+			param["begin_break_time"],
+			m["work_record"].BeginBreakTime.Format(time.RFC3339),
+		)
 	}
 
-	if m["work_record"].EndBreakTime.Format(time.RFC3339) != "2014-10-10T13:00:00+09:00" {
-		t.Errorf("Expected end_break_time to be '2014-10-10T13:00:00+09:00'. Got '%v'", m["work_record"].EndBreakTime.Format(time.RFC3339))
+	if m["work_record"].EndBreakTime.Format(time.RFC3339) != param["end_break_time"] {
+		t.Errorf(
+			"Expected end_break_time to be '%v'. Got '%v'",
+			param["end_break_time"],
+			m["work_record"].EndBreakTime.Format(time.RFC3339),
+		)
 	}
 }
 
@@ -161,75 +179,77 @@ func TestUpdateWorkRecord(t *testing.T) {
 
 	req, _ := http.NewRequest("GET", path, nil)
 	response := executeRequest(req)
-	var before map[string]models.WorkRecord
-	json.Unmarshal(response.Body.Bytes(), &before)
-	beforeWorkRecord := before["work_record"]
+	var beforeWorkRecord map[string]models.WorkRecord
+	json.Unmarshal(response.Body.Bytes(), &beforeWorkRecord)
 
-	param := `
-{
-"work_date": "2016-10-10T00:00:00+09:00",
-"begin_work_time": "2017-10-10T10:00:00+09:00",
-"end_work_time": "2018-10-10T19:00:00+09:00",
-"begin_break_time": "2019-10-10T12:00:00+09:00",
-"end_break_time": "2020-10-10T13:00:00+09:00"
-}
-`
-	payload := []byte(param)
+	param := map[string]string{
+		"work_date":        "2016-10-10T00:00:00+09:00",
+		"begin_work_time":  "2017-10-10T10:00:00+09:00",
+		"end_work_time":    "2018-10-10T19:00:00+09:00",
+		"begin_break_time": "2019-10-10T12:00:00+09:00",
+		"end_break_time":   "2020-10-10T13:00:00+09:00",
+	}
+	payload, _ := json.Marshal(param)
 	req, _ = http.NewRequest("PUT", path, bytes.NewBuffer(payload))
 	response = executeRequest(req)
 
 	checkResponseCode(t, http.StatusNoContent, response.Code)
 
-	if response.Header()["Location"][0] != "http://localhost:8080/" + fmt.Sprint(work.ID) {
+	if response.Header()["Location"][0] != "http://localhost:8080/"+fmt.Sprint(work.ID) {
 		t.Errorf(
 			"Expected the Location Haader to remain the same (%v). Got %v",
-			"http://localhost:8080/" + fmt.Sprint(work.ID),
+			"http://localhost:8080/"+fmt.Sprint(work.ID),
 			response.Header()["Location"][0],
 		)
 	}
 
 	var afterWorkRecord models.WorkRecord
-	a.DB.First(&afterWorkRecord, beforeWorkRecord.ID)
+	a.DB.First(&afterWorkRecord, beforeWorkRecord["work_record"].ID)
 
-	if afterWorkRecord.ID != beforeWorkRecord.ID {
+	if afterWorkRecord.ID != beforeWorkRecord["work_record"].ID {
 		t.Errorf(
 			"Expected the id to remain the same (%v). Got %v",
-			beforeWorkRecord.ID,
+			beforeWorkRecord["work_record"].ID,
 			afterWorkRecord.ID,
 		)
 	}
 
-	if afterWorkRecord.WorkDate.Format(time.RFC3339) != "2016-10-10T00:00:00+09:00" {
+	if afterWorkRecord.WorkDate.Format(time.RFC3339) != param["work_date"] {
 		t.Errorf(
-			"Expected the WorkDate to Update Failed 2016-10-10T00:00:00+09:00. Got %v",
+			"Expected the WorkDate to Update Failed '%v'. Got '%v'",
+			param["work_date"],
 			afterWorkRecord.WorkDate.Format(time.RFC3339),
 		)
 	}
 
-	if afterWorkRecord.BeginWorkTime.Format(time.RFC3339) != "2017-10-10T10:00:00+09:00" {
+	if afterWorkRecord.BeginWorkTime.Format(time.RFC3339) != param["begin_work_time"] {
 		t.Errorf(
-			"Expected the BeginWorkTime to Update Failed 2017-10-10T10:00:00+09:00. Got %v",
+			"Expected the BeginWorkTime to Update Failed '%v'. Got '%v'",
+			param["begin_work_time"],
 			afterWorkRecord.BeginWorkTime.Format(time.RFC3339),
 		)
 	}
 
-	if afterWorkRecord.EndWorkTime.Format(time.RFC3339) != "2018-10-10T19:00:00+09:00" {
+	if afterWorkRecord.EndWorkTime.Format(time.RFC3339) != param["end_work_time"] {
 		t.Errorf(
-			"Expected the EndWorkTime to Update Failed 2018-10-10T19:00:00+09:00. Got %v",
+			"Expected the EndWorkTime to Update Failed '%v'. Got '%v'",
+			param["end_work_time"],
 			afterWorkRecord.EndWorkTime.Format(time.RFC3339),
 		)
 	}
 
-	if afterWorkRecord.BeginBreakTime.Format(time.RFC3339) != "2019-10-10T12:00:00+09:00" {
+	if afterWorkRecord.BeginBreakTime.Format(time.RFC3339) != param["begin_break_time"] {
 		t.Errorf(
-			"Expected the BeginBreakTime to Update Failed 2019-10-10T12:00:00+09:00. Got %v",
+			"Expected the BeginBreakTime to Update Failed '%v'. Got '%v'",
+			param["begin_break_time"],
 			afterWorkRecord.BeginBreakTime.Format(time.RFC3339),
 		)
 	}
 
-	if afterWorkRecord.EndBreakTime.Format(time.RFC3339) != "2020-10-10T13:00:00+09:00" {
+	if afterWorkRecord.EndBreakTime.Format(time.RFC3339) != param["end_break_time"] {
 		t.Errorf(
-			"Expected the EndBreakTime to Update Failed 2020-10-10T13:00:00+09:00. Got %v",
+			"Expected the EndBreakTime to Update Failed '%v'. Got '%v'",
+			param["end_break_time"],
 			afterWorkRecord.EndBreakTime.Format(time.RFC3339),
 		)
 	}
