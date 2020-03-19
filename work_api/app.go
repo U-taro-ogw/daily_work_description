@@ -30,6 +30,7 @@ func (a *App)initializeRoutes() {
 	a.Router.HandleFunc("/work_records/{id:[0-9]+}", a.getWorkRecord).Methods("GET")
 	a.Router.HandleFunc("/work_records", a.createWorkRecord).Methods("POST")
 	a.Router.HandleFunc("/work_records/{id:[0-9]+}", a.updateWorkRecord).Methods("PUT")
+	a.Router.HandleFunc("/work_records/{id:[0-9]+}", a.deleteWorkRecord).Methods("DELETE")
 }
 
 func (a *App) Run(addr string) {
@@ -106,6 +107,29 @@ func (a *App) updateWorkRecord(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Location", "http://localhost:8080/" + fmt.Sprint(wr.ID))
+	respondWithJSON(w, http.StatusNoContent, nil)
+}
+
+func (a *App) deleteWorkRecord(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, "Invalid ID")
+		return
+	}
+
+	wr := models.WorkRecord{ID: id}
+	if err := wr.DeleteWorkRecord(a.DB); err != nil {
+		switch err.Error() {
+		case "Not Found":
+			respondWithError(w, http.StatusNotFound, err.Error())
+			return
+		default:
+			respondWithError(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+	}
+
 	respondWithJSON(w, http.StatusNoContent, nil)
 }
 

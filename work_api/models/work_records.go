@@ -34,7 +34,7 @@ func (w *WorkRecord) UpdateWorkRecord(db *gorm.DB) error {
 }
 
 func (w *WorkRecord) DeleteWorkRecord(db *gorm.DB) error {
-	return errors.New("未実装")
+	return db.Unscoped().Delete(&w).Error
 }
 
 func (w *WorkRecord) CreateWorkRecord(db *gorm.DB) error {

@@ -235,26 +235,26 @@ func TestUpdateWorkRecord(t *testing.T) {
 	}
 }
 
-//func TestDeleteWorkRecord(t *testing.T) {
-//	clearTable()
-//	addWorkRecord(1)
-//
-//	var work models.WorkRecord
-//	a.DB.First(&work)
-//	path := `/work_records/` + fmt.Sprint(work.ID)
-//
-//	req, _ := http.NewRequest("GET", path, nil)
-//	response := executeRequest(req)
-//	checkResponseCode(t, http.StatusOK, response.Code)
-//
-//	req, _ = http.NewRequest("DELETE", path, nil)
-//	response = executeRequest(req)
-//	checkResponseCode(t, http.StatusOK, response.Code)
-//
-//	req, _ = http.NewRequest("GET", path, nil)
-//	response = executeRequest(req)
-//	checkResponseCode(t, http.StatusNotFound, response.Code)
-//}
+func TestDeleteWorkRecord(t *testing.T) {
+	clearTable()
+	addWorkRecord(1)
+
+	var work models.WorkRecord
+	a.DB.First(&work)
+	path := `/work_records/` + fmt.Sprint(work.ID)
+
+	req, _ := http.NewRequest("GET", path, nil)
+	response := executeRequest(req)
+	checkResponseCode(t, http.StatusOK, response.Code)
+
+	req, _ = http.NewRequest("DELETE", path, nil)
+	response = executeRequest(req)
+	checkResponseCode(t, http.StatusNoContent, response.Code)
+
+	req, _ = http.NewRequest("GET", path, nil)
+	response = executeRequest(req)
+	checkResponseCode(t, http.StatusNotFound, response.Code)
+}
 
 func addWorkRecord(count int) {
 	var work models.WorkRecord
