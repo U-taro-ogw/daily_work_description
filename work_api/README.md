@@ -46,3 +46,7 @@ curl -X PUT http://localhost:8080/work_records/:id \
 ```shell script
 curl -X DELETE http://localhost:8080/work_records/:id
 ```
+
+# TODO
+- OPEN API
+- echoを使う
