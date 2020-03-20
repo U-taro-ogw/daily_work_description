@@ -1,9 +1,16 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import App from './App';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import App from './App'
 
-test('renders learn react link', () => {
-  const { getByText } = render(<App />);
-  const linkElement = getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
-});
+let container = null
+
+beforeEach(() => {
+  container = document.createElement('div')
+})
+
+describe('<App />', () => {
+  it('リンクを出力する', () => {
+    ReactDOM.render(<App />, container)
+    expect(container.innerHTML).toContain('Learn React')
+  })
+})
