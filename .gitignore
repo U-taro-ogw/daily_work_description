@@ -7,5 +7,5 @@ work_db/db_data/
 .DS_Store
 
 # react
-react_app/node_modules/
+vue_app/node_modules/
 

@@ -1,11 +1,11 @@
 version: '3'
 services:
-  react_app:
-    build: ./react_app
+  vue_app:
+    build: ./vue_app
     ports:
       - '3000:3000'
     volumes:
-      - ./react_app:/react_app
+      - ./vue_app:/vue_app
 
   work_api:
     build: ./work_api
