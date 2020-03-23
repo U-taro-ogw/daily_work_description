@@ -5,7 +5,9 @@ WORKDIR /vue_app
 COPY package.json ./
 COPY yarn.lock ./
 
-RUN yarn install
+RUN apk update && \
+    yarn global add @vue/cli && \
+    yarn install
 
 COPY . ./
 
